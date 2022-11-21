@@ -1,0 +1,33 @@
+{
+    // Eslint配置
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.eslint": true
+    },
+    "stylelint.validate": [
+        "css",
+        "postcss",
+        "scss",
+        "sass",
+        "vue"
+    ],
+    "i18n-ally.localesPaths": ["lang"], // 相对于项目根目录的语言环境目录路径。它也可以是路径数组。全局模式是可以接受的
+    "i18n-ally.keystyle": "nested", // 语言环境文件中的键样式。可以是flat( {"a.b.c": "..."}) 或nested( {"a": {"b": {"c": "..."}}})
+    "i18n-ally.sortKeys": false,
+    "i18n-ally.enabledParsers": ["json", "js"],
+    "i18n-ally.sourceLanguage": "zh-cn", // 项目的主要语言环境。翻译时它也将是源语言
+    "i18n-ally.displayLanguage": "zh-cn", // 在注释和树视图中显示语言
+    "i18n-ally.enabledFrameworks": ["vue", "react"], // 指定要启用的受支持框架。如果没有设置值，扩展会自动检测框架
+    "i18n-ally.translate.engines": [
+        "google-cn",
+        "google",
+        "deepl",
+        "libretranslate"
+    ],
+    "i18n-ally.extract.ignored": [
+        "({{ unitLen }})",
+        "{{\n                                                        isFavorite\n                                                            ? \"",
+        "",
+        ""
+    ]
+}

@@ -1,0 +1,37 @@
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.qc-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.mt0 {
+    margin-bottom: 0 !important;
+}
+
+.m-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    //z-index: 9999;
+    z-index: 10100;
+    min-width: 80px;
+    min-height: 30px;
+    padding: 5px 10px;
+    color: #fff;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    transform: translate(-50%);
+    transition: all 0.3s ease;
+
+    &.top {
+        top: 45%;
+    }
+}

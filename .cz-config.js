@@ -1,0 +1,47 @@
+module.exports = {
+    types: [
+        { value: "init", name: "init:     初始提交" },
+        { value: "feat", name: "feat:     增加新功能" },
+        { value: "fix", name: "fix:      修复bug" },
+        { value: "docs", name: "docs:      添加或修改了文档" },
+        { value: "ui", name: "ui:       更新UI" },
+        {
+            value: "style",
+            name: "style:    修改格式、书写错误、空格等不影响代码逻辑的操作",
+        },
+        {
+            value: "refactor",
+            name: "refactor: 修改的代码不是新增功能也不是修改bug,比如代码重构",
+        },
+        { value: "perf", name: "perf:     修改了提升性能的代码" },
+        { value: "test", name: "test:     增删测试" },
+        { value: "build", name: "build:     修改了编译配置文件" },
+        { value: "chore", name: "chore:    无src或test的操作" },
+        { value: "revert", name: "revert:   回滚操作" },
+        { value: "add", name: "add:      添加依赖" },
+        { value: "delete", name: "del:      删除代码/文件" },
+        { value: "merge", name: "merge:      合并文件" },
+    ],
+    scopes: [
+        { name: "components" },
+        { name: "styles" },
+        { name: "utils" },
+        { name: "store" },
+        { name: "config" },
+        { name: "plugins" },
+        { name: "deps" },
+    ],
+    messages: {
+        type: "选择更改类型:\n",
+        // 如果allowcustomscopes为true，则使用
+        scope: "选择一个 scope（可选）：\n",
+        customScope: "请输入自定义的 scope：",
+        subject: "简短描述:\n",
+        body: '详细描述. 使用"|"换行:\n',
+        breaking: "Breaking Changes列表:\n",
+        footer: "关闭的issues列表. E.g.: #31, #34:\n",
+        confirmCommit: "确认提交?",
+    },
+    allowCustomScopes: true,
+    allowBreakingChanges: ["feat", "fix"],
+};
