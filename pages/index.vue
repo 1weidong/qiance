@@ -24,15 +24,6 @@ export default {
     components: {
         searchMain,
     },
-    props: {},
-    data() {
-        return {};
-    },
-    computed: {},
-    watch: {},
-    created() {},
-    mounted() {},
-    methods: {},
 };
 </script>
 

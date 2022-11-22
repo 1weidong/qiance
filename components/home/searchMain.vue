@@ -40,7 +40,7 @@ export default {
         goListPage() {
             this.$router.push({
                 path: "/search",
-                query: { keyword: this.keyword },
+                query: { keyword: this.keyword, type: this.active },
             });
         },
     },
