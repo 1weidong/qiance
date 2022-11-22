@@ -1,0 +1,14 @@
+{
+  "entry": "server.js",
+  "files": {
+    "pages/404.ba3053a.js": "pages/404.ba3053a.js",
+    "pages/content/components/PatentBox.7a08fcf.js": "pages/content/components/PatentBox.7a08fcf.js",
+    "pages/content/search.5886717.js": "pages/content/search.5886717.js",
+    "pages/index.ed91f79.js": "pages/index.ed91f79.js",
+    "pages/users.597b94f.js": "pages/users.597b94f.js",
+    "pages/users/login.3bbde07.js": "pages/users/login.3bbde07.js",
+    "pages/users/resetPassword.eb6bfb8.js": "pages/users/resetPassword.eb6bfb8.js",
+    "server.js": "server.js"
+  },
+  "maps": {}
+}
