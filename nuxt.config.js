@@ -139,12 +139,15 @@ module.exports = {
             target: envs.APP_URL,
         },
     },
+    generate: {
+        dir: "docs",
+    },
     /*
      ** Build configuration
      */
     // buildDir: `dist/${env}`,
     build: {
-        base: "/qiance/",
+        base: "/qiance",
         analyze: env === "local",
         extractCSS: env === "prod",
         postcss: {
