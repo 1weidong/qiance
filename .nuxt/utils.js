@@ -149,7 +149,7 @@ export async function setContext (app, context) {
       store: app.store,
       payload: context.payload,
       error: context.error,
-      base: '/',
+      base: '/qiance/',
       env: {"APP_URL":"http://39.108.212.191:33063"}
     }
     // Only set once

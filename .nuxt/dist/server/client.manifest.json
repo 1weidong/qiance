@@ -1,10 +1,10 @@
 {
-  "publicPath": "/_nuxt/",
+  "publicPath": "/qiance/_nuxt/",
   "all": [
     "../server/index.spa.html",
     "../server/index.ssr.html",
     "LICENSES",
-    "app.34281db.js",
+    "app.5c80f80.js",
     "commons.app.e9f9cb1.js",
     "fonts/element-icons.535877f.woff",
     "fonts/element-icons.732389d.ttf",
@@ -17,14 +17,14 @@
     "pages/users.d065b5c.js",
     "pages/users/login.832b863.js",
     "pages/users/resetPassword.2b9d71f.js",
-    "runtime.8774bd6.js",
+    "runtime.a81ce20.js",
     "vendors.app.55dbb4a.js"
   ],
   "initial": [
-    "runtime.8774bd6.js",
+    "runtime.a81ce20.js",
     "commons.app.e9f9cb1.js",
     "vendors.app.55dbb4a.js",
-    "app.34281db.js"
+    "app.5c80f80.js"
   ],
   "async": [
     "pages/404.5333dbd.js",
@@ -1869,7 +1869,7 @@
     ]
   },
   "assetsMapping": {
-    "app.34281db.js": "1a3ae26b",
+    "app.5c80f80.js": "1a3ae26b",
     "commons.app.e9f9cb1.js": "0859c165",
     "pages/404.5333dbd.js": "587dc592",
     "pages/content/components/PatentBox.fc0060d.js": "73c5a7be",
@@ -1878,7 +1878,7 @@
     "pages/users.d065b5c.js": "28bc4372",
     "pages/users/login.832b863.js": "cf10fcbe",
     "pages/users/resetPassword.2b9d71f.js": "26235742",
-    "runtime.8774bd6.js": "6fca0322",
+    "runtime.a81ce20.js": "6fca0322",
     "vendors.app.55dbb4a.js": "7ea1d828"
   }
 }

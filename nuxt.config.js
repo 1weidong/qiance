@@ -147,7 +147,6 @@ module.exports = {
      */
     // buildDir: `dist/${env}`,
     build: {
-        base: "/qiance",
         analyze: env === "local",
         extractCSS: env === "prod",
         postcss: {
@@ -239,6 +238,7 @@ module.exports = {
         ],
     },
     router: {
+        base: "/qiance",
         middleware: "terminal",
         extendRoutes(routes) {
             routes.push(
