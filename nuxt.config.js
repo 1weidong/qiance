@@ -142,8 +142,9 @@ module.exports = {
     /*
      ** Build configuration
      */
-    buildDir: `dist/${env}`,
+    // buildDir: `dist/${env}`,
     build: {
+        base: "/qiance/",
         analyze: env === "local",
         extractCSS: env === "prod",
         postcss: {

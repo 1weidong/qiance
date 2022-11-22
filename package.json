@@ -10,7 +10,8 @@
         "build:prod": "rimraf dist/* && cross-env _ENV=prod nuxt build",
         "start": "_ENV=dev nuxt start",
         "test": "jest",
-        "commit": "cz"
+        "commit": "cz",
+        "generate": "nuxt generate"
     },
     "dependencies": {
         "@nuxtjs/axios": "^5.0.0",
