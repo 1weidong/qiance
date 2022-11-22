@@ -141,6 +141,7 @@ module.exports = {
     },
     generate: {
         dir: "docs",
+        subFolders: false,
     },
     /*
      ** Build configuration
