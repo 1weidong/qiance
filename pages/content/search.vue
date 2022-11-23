@@ -29,7 +29,11 @@
                     ></el-option>
                 </el-select>
                 <template slot="append">
-                    <el-button class="search-btn" type="primary">
+                    <el-button
+                        class="search-btn"
+                        type="primary"
+                        @click="getData"
+                    >
                         智能查询
                     </el-button>
                 </template>
@@ -39,19 +43,72 @@
         <div class="footer">
             <span class="tip">
                 共为你检索到
-                <span class="info totalInfo" style="color: #f00">106552</span>
+                <span class="info totalInfo" style="color: #f00">{{
+                    total
+                }}</span>
                 条 信 息
             </span>
+            <PatentBox :list="commonData" />
+            <div v-if="total" class="result_container_main_left_pagination">
+                <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :total="total"
+                    @current-change="handelChangePage"
+                >
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import PatentBox from "~/pages/content/components/PatentBox";
 export default {
-    asyncData({ query }) {
-        return {
-            query,
+    components: {
+        PatentBox,
+    },
+
+    asyncData({ store, query }, callback) {
+        const { keyword, type } = query;
+        const qdata = {
+            searchKey: keyword,
+            searchType: "title",
         };
+        console.log(query);
+        if (!type) {
+            const result = {
+                query,
+                commonData: [],
+                paging: {},
+                keyword: "",
+            };
+            callback(null, result);
+            return;
+        }
+
+        const methodName = new Map([
+            ["1", "GET_TRADEMARK"], // 查商标
+            ["2", "GET_TRADE_PATENT"], // 查专利
+            ["3", "GET_NUCLEAR"], // 免费核名
+        ]);
+
+        const promises = [store.dispatch(methodName.get(type), qdata)];
+
+        Promise.allSettled(promises).then((values) => {
+            const [commonRes] = values;
+            const commonData = commonRes?.value?.data?.result || [];
+            const paging = commonRes?.value?.data?.paging || {};
+
+            console.log(commonRes);
+            const result = {
+                query,
+                commonData,
+                paging,
+                keyword,
+            };
+            callback(null, result);
+        });
     },
 
     data() {
@@ -79,8 +136,8 @@ export default {
                     label: "发明/设计人",
                 },
             ],
-            keyword: "",
             searchPlaceholder: "",
+            curryNum: 1,
         };
     },
 
@@ -91,6 +148,39 @@ export default {
             if (type === "1") return "查商标";
             if (type === "2") return "查专利";
             return "免费核名";
+        },
+
+        total({ paging }) {
+            return paging?.totalRecords || 0;
+        },
+    },
+
+    methods: {
+        ...mapActions(["GET_TRADE_PATENT"]),
+        async getData() {
+            try {
+                const params = {
+                    searchKey: this.keyword,
+                    searchType: this.selectPatentType,
+                    pageIndex: this.curryNum,
+                };
+                const res = await this.GET_TRADE_PATENT(params);
+                console.log(res);
+                if (res.code === 200) {
+                    this.commonData = res?.data?.result || [];
+                    this.paging = res?.data?.paging || {};
+                    let ele = document.querySelector(".search");
+                    this.scrollIntoView(ele);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // 页面更新
+        handelChangePage(num) {
+            this.curryNum = num;
+            this.getData();
         },
     },
 };
@@ -195,6 +285,15 @@ export default {
             line-height: 45px;
             border: 1px solid #eee;
         }
+    }
+
+    .result_container_main_left_pagination {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin: 20px 0 40px;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
     }
 }
 </style>

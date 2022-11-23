@@ -1,4 +1,5 @@
 import Cookie from "js-cookie";
+import dayjs from "dayjs";
 
 export default {
     setCookie(name, val, expires = 30) {
@@ -125,5 +126,9 @@ export default {
         setTimeout(() => {
             div.parentNode && div.parentNode.removeChild(div);
         }, 3000);
+    },
+
+    timeFormated(dataTime) {
+        return  dayjs(dataTime).format('YYYY-MM-DD')
     },
 };
