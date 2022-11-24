@@ -12,21 +12,26 @@
             </li>
         </ul>
         <div class="contents">
-            <el-input
-                v-model="keyword"
-                :placeholder="searchPlaceholder"
-                class="input-grooup"
-            >
-                <template slot="append">
-                    <el-button
-                        class="search-btn"
-                        type="primary"
-                        @click="goListPage"
-                    >
-                        智能查询
-                    </el-button>
-                </template>
-            </el-input>
+            <template v-if="active === 3">
+                <searchSelect @goListPage="goListPage" />
+            </template>
+            <template v-else>
+                <el-input
+                    v-model="keyword"
+                    :placeholder="searchPlaceholder"
+                    class="input-grooup"
+                >
+                    <template slot="append">
+                        <el-button
+                            class="search-btn"
+                            type="primary"
+                            @click="goListPage"
+                        >
+                            智能查询
+                        </el-button>
+                    </template>
+                </el-input>
+            </template>
         </div>
     </div>
 </template>
@@ -37,10 +42,10 @@ export default {
     mixins: [searchMixins],
 
     methods: {
-        goListPage() {
+        goListPage(data) {
             this.$router.push({
                 path: "/search",
-                query: { keyword: this.keyword, type: this.active },
+                query: { keyword: this.keyword, type: this.active, ...data },
             });
         },
     },

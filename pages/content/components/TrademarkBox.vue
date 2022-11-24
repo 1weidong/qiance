@@ -1,35 +1,35 @@
 <template>
     <div class="contentbody">
         <div v-for="(item, index) in dataList" :key="index" class="item">
+            <img :src="item.imageUrl" alt="商标图" class="imgt" />
             <div class="itemleft">
                 <div>
-                    <span class="businessname">{{
-                        defaultTxt(item.title)
-                    }}</span>
-                    <!-- <span class="biao">发明</span>
-                    <span class="biaotip">在审</span> -->
+                    <span class="businessname">
+                        {{ defaultTxt(item.name) }}
+                    </span>
+                    <span class="biao">{{ setClsTxt(item.intCls) }}</span>
+                    <span class="biao">{{ item.regNo }}</span>
+                    <span :class="['button1', flowClass(item.flowStatus)]">
+                        <span class="buttonfont">
+                            {{ item.flowStatusDesc }}
+                        </span>
+                    </span>
                 </div>
                 <br />
-                <span class="b1">公告号: </span>
-                <span class="b2">{{ defaultTxt(item.publicationNumber) }}</span>
-                <span class="b3">公告日期: </span>
-                <span class="b4">{{ timeFormated(item.publicationDate) }}</span>
+                <span class="b1">申请日期: </span>
+                <span class="b2">{{ timeFormated(item.appDate) }}</span>
+                <span class="b3">初审公告号: </span>
+                <span class="b4">{{ defaultTxt("") }}</span>
                 <br />
-                <span class="b5">申请号: </span>
-                <span class="b6">{{ defaultTxt(item.applicationNumber) }}</span>
-                <span class="b7">申请日期: </span>
-                <span class="b8">{{ timeFormated(item.applicationDate) }}</span>
+                <span class="b5">申请人: </span>
+                <span class="b6">{{ defaultTxt(item.applicantCn) }}</span>
+                <span class="b7">初审公告日期: </span>
+                <span class="b8">{{ timeFormated("") }}</span>
                 <br />
-                <span class="b9">申请人: </span>
-                <span class="b10">{{
-                    defaultTxt(item.assigneestringList)
-                }}</span>
-                <span class="b11">发明/设计人: </span>
-                <span class="b12">
-                    <template v-for="inventor in item.inventorStringList">
-                        {{ inventor }}
-                    </template>
-                </span>
+                <span class="b9">代理机构: </span>
+                <span class="b10">{{ defaultTxt(item.agent) }}</span>
+                <span class="b11">注册公告日期: </span>
+                <span class="b12">{{ timeFormated("") }}</span>
                 <br />
             </div>
         </div>
@@ -44,12 +44,27 @@ export default {
             type: Array,
             default: () => [],
         },
+        groupItems: {
+            type: Array,
+            default: () => [],
+        },
     },
 
     data() {
         return {
             dataList: [],
         };
+    },
+
+    computed: {
+        // 商标注册状态
+        flowStatusList({ groupItems }) {
+            return groupItems[1]?.items || [];
+        },
+        // 商标分类
+        clsList({ groupItems }) {
+            return groupItems[2]?.items || [];
+        },
     },
 
     watch: {
@@ -74,6 +89,35 @@ export default {
             }
             return txt;
         },
+        flowIcon(data) {
+            // 已注册
+            if (data.flowStatus === 8) return "el-icon-circle-check";
+        },
+        // 国际分类
+        setClsTxt(code) {
+            const cls = _.find(this.clsList, (item) => item.value == code);
+            return `${cls.value}类 ${cls.desc}`;
+        },
+        // 商标状态类
+        flowClass(status) {
+            let num = 4;
+            switch (status) {
+                // case "8":
+                //     num = 1;
+                //     break;
+                case "1":
+                    num = 2;
+                    break;
+                case "5":
+                    num = 3;
+                    break;
+                default:
+                    num = 4;
+                    break;
+            }
+
+            return `button-${num}`;
+        },
     },
 };
 </script>
@@ -83,17 +127,24 @@ export default {
     display: block;
     width: 100%;
     height: 180px;
-    padding: 20px;
     background: #fff;
-    border-right: 1px solid #e9e9e9;
-    border-bottom: 1px solid #e9e9e9;
-    border-left: 1px solid #e9e9e9;
+    border: 1px solid #e9e9e9;
+    border-top: none;
     cursor: pointer;
+
+    .imgt {
+        float: left;
+        width: 190px;
+        height: 109px;
+        margin-top: 30px;
+        margin-left: 21px;
+    }
 
     .itemleft {
         float: left;
-        width: 100%;
+        width: 950px;
         height: 109px;
+        margin-top: 30px;
         margin-left: 30px;
 
         .businessname {
@@ -108,31 +159,49 @@ export default {
 
         .biao {
             display: inline-block;
-            min-width: 68px;
+            box-sizing: border-box;
+            width: 126px;
+            height: 22px;
             margin-left: 10px;
-            padding: 5px 10px;
-            color: #fff;
-            font-size: 12px;
-            font-family: MicrosoftYaHei;
-            line-height: 12px;
+            padding-top: 2px;
+            color: #05a4ffff;
             text-align: center;
-            background: #7a49e3;
+            background: rgba(230, 245, 255, 1);
             border-radius: 2px;
+            opacity: 1;
         }
 
-        .biaotip {
-            display: inline-block;
-            box-sizing: border-box;
-            margin-left: 10px;
-            padding: 4px 10px;
-            color: #118ee9;
-            font-weight: 400;
-            font-size: 12px;
-            font-family: PingFangSC-Regular, "PingFang SC";
-            line-height: 14px;
+        .button1 {
+            float: right;
+            width: 85px;
+            height: 28px;
+            margin-right: 40px;
+            line-height: 28px;
             text-align: center;
-            background: #ebf2ff;
-            border-radius: 1px;
+            background: rgba(10, 191, 91, 1);
+
+            &.button-2 {
+                background: rgb(5, 164, 255);
+            }
+
+            &.button-3 {
+                background: rgb(240, 182, 75);
+            }
+
+            &.button-4 {
+                background: rgb(211, 217, 227);
+            }
+
+            .buttonfont {
+                display: inline-block;
+                width: 42px;
+                height: 28px;
+                color: #fff;
+                font-weight: 400;
+                font-size: 14px;
+                font-family: PingFangSC-Regular, "PingFang SC";
+                line-height: 28px;
+            }
         }
 
         .b1 {
@@ -149,7 +218,7 @@ export default {
 
         .b2 {
             display: inline-block;
-            width: 178px;
+            width: 280px;
             height: 20px;
             margin-top: 9px;
             margin-left: 20px;
@@ -164,7 +233,7 @@ export default {
             display: inline-block;
             width: 88px;
             height: 20px;
-            margin-left: 190px;
+            margin-left: 80px;
             color: #797979;
             font-weight: 400;
             font-size: 14px;
@@ -197,7 +266,7 @@ export default {
 
         .b6 {
             display: inline-block;
-            width: 178px;
+            width: 280px;
             height: 20px;
             margin-top: 9px;
             margin-left: 20px;
@@ -212,7 +281,7 @@ export default {
             display: inline-block;
             width: 88px;
             height: 20px;
-            margin-left: 190px;
+            margin-left: 80px;
             color: #797979;
             font-weight: 400;
             font-size: 14px;
@@ -245,25 +314,22 @@ export default {
 
         .b10 {
             display: inline-block;
-            width: 300px;
-            height: 21px;
-            margin-top: 4px;
+            width: 280px;
+            height: 20px;
+            margin-top: 9px;
             margin-left: 20px;
-            overflow: hidden;
             color: #484848;
             font-weight: 400;
             font-size: 14px;
             font-family: PingFangSC-Regular, "PingFang SC";
-            line-height: 27px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            line-height: 20px;
         }
 
         .b11 {
             display: inline-block;
             width: 88px;
             height: 20px;
-            margin-left: 68px;
+            margin-left: 80px;
             color: #797979;
             font-weight: 400;
             font-size: 14px;
@@ -272,17 +338,14 @@ export default {
         }
 
         .b12 {
-            display: inline-block;
-            width: 560px;
+            width: 82px;
+            height: 20px;
             margin-left: 20px;
-            overflow: hidden;
             color: #484848;
             font-weight: 400;
             font-size: 14px;
             font-family: PingFangSC-Regular, "PingFang SC";
-            line-height: 15px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            line-height: 20px;
         }
     }
 }

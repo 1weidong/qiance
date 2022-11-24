@@ -1,4 +1,10 @@
+import { searchPlaceholder } from "~/utils/commonText";
+import searchSelect from "~/components/home/searchSelect";
 export default {
+    components: {
+        searchSelect,
+    },
+
     data() {
         return {
             active: 1,
@@ -31,11 +37,11 @@ export default {
                 let placeholder = undefined;
                 switch (newVal) {
                     case 1:
-                        placeholder = "请输入商标名称";
+                        placeholder = searchPlaceholder.TRADEMARK;
                         name = "GET_TRADEMARK";
                         break;
                     case 2:
-                        placeholder = "请输入专利名称";
+                        placeholder = searchPlaceholder.TRADE_PATENT;
                         name = "GET_TRADE_PATENT";
                         break;
                     case 3:

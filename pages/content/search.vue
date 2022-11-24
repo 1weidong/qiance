@@ -9,13 +9,21 @@
             </span>
         </div>
 
-        <div class="search">
+        <div :class="['search', { 'search-nuclear': type === '3' }]">
+            <template v-if="type === '3'">
+                <searchSelect
+                    class="search-main-nuclear"
+                    @goListPage="getData"
+                />
+            </template>
             <el-input
+                v-else
                 v-model="keyword"
                 :placeholder="searchPlaceholder"
-                class="input-grooup"
+                :class="['input-grooup', `input-grooup-${type}`]"
             >
                 <el-select
+                    v-if="type === 2"
                     slot="prepend"
                     v-model="selectPatentType"
                     placeholder="请选择"
@@ -41,14 +49,18 @@
         </div>
 
         <div class="footer">
-            <span class="tip">
+            <span v-if="type !== '3'" class="tip">
                 共为你检索到
                 <span class="info totalInfo" style="color: #f00">{{
                     total
                 }}</span>
                 条 信 息
             </span>
-            <PatentBox :list="commonData" />
+            <component
+                :is="componentName"
+                :list="commonData"
+                :group-items="groupItems"
+            ></component>
             <div v-if="total" class="result_container_main_left_pagination">
                 <el-pagination
                     background
@@ -63,52 +75,81 @@
 </template>
 
 <script>
+import { searchPlaceholder } from "~/utils/commonText";
+import searchSelect from "~/components/home/searchSelect";
 import PatentBox from "~/pages/content/components/PatentBox";
+import TrademarkBox from "~/pages/content/components/TrademarkBox";
+import nuclearBox from "~/pages/content/components/nuclearBox";
 export default {
     components: {
+        searchSelect,
         PatentBox,
+        TrademarkBox,
+        nuclearBox,
     },
 
-    asyncData({ store, query }, callback) {
+    async asyncData({ store, query }) {
         const { keyword, type } = query;
-        const qdata = {
-            searchKey: keyword,
-            searchType: "title",
-        };
-        console.log(query);
         if (!type) {
-            const result = {
+            return {
                 query,
                 commonData: [],
+                groupItems: [],
                 paging: {},
                 keyword: "",
+                type: "1",
             };
-            callback(null, result);
-            return;
         }
 
         const methodName = new Map([
-            ["1", "GET_TRADEMARK"], // 查商标
-            ["2", "GET_TRADE_PATENT"], // 查专利
-            ["3", "GET_NUCLEAR"], // 免费核名
+            // 查商标
+            [
+                "1",
+                {
+                    name: "GET_TRADEMARK",
+                    params: {
+                        keyword,
+                    },
+                },
+            ],
+            // 查专利
+            [
+                "2",
+                {
+                    name: "GET_TRADE_PATENT",
+                    params: {
+                        searchKey: keyword,
+                        searchType: "title",
+                    },
+                },
+            ],
+            // 免费核名
+            [
+                "3",
+                {
+                    name: "GET_NUCLEAR",
+                    params: {
+                        keyword,
+                    },
+                },
+            ],
         ]);
+        const qdata = methodName.get(type);
+        const promises = [store.dispatch(qdata.name, qdata.params)];
+        const [commonRes] = await Promise.all(promises);
+        const commonData = commonRes?.data?.result || [];
+        const groupItems = commonRes?.data?.groupItems || [];
+        const paging = commonRes?.data?.paging || {};
 
-        const promises = [store.dispatch(methodName.get(type), qdata)];
-
-        Promise.allSettled(promises).then((values) => {
-            const [commonRes] = values;
-            const commonData = commonRes?.value?.data?.result || [];
-            const paging = commonRes?.value?.data?.paging || {};
-
-            console.log(commonRes);
-            const result = {
-                query,
-                commonData,
-                paging,
-                keyword,
-            };
-            callback(null, result);
-        });
+        console.log(commonRes);
+        return {
+            query,
+            commonData,
+            groupItems,
+            paging,
+            keyword,
+            type,
+        };
     },
 
     data() {
@@ -136,16 +177,14 @@ export default {
                     label: "发明/设计人",
                 },
             ],
-            searchPlaceholder: "",
             curryNum: 1,
         };
     },
 
     computed: {
         title({ query }) {
-            console.log(query);
             const { type } = query;
-            if (type === "1") return "查商标";
+            if (type === "1") return "商标查询";
             if (type === "2") return "查专利";
             return "免费核名";
         },
@@ -153,21 +192,81 @@ export default {
         total({ paging }) {
             return paging?.totalRecords || 0;
         },
+
+        searchPlaceholder({ type }) {
+            let placeholder = undefined;
+            switch (type) {
+                case "1":
+                    placeholder = searchPlaceholder.TRADEMARK;
+                    break;
+                case "2":
+                    placeholder = searchPlaceholder.TRADE_PATENT;
+                    break;
+                case "3":
+                    // placeholder = "请输入核名名称";
+                    break;
+            }
+            return placeholder;
+        },
+
+        componentName({ type }) {
+            if (type === "1") {
+                return TrademarkBox;
+            }
+
+            return type === "2" ? PatentBox : nuclearBox;
+        },
+    },
+
+    created() {
+        if (process.client) {
+            this.getData();
+        }
     },
 
     methods: {
-        ...mapActions(["GET_TRADE_PATENT"]),
+        ...mapActions(["GET_TRADEMARK", "GET_TRADE_PATENT", "GET_NUCLEAR"]),
         async getData() {
             try {
-                const params = {
-                    searchKey: this.keyword,
-                    searchType: this.selectPatentType,
-                    pageIndex: this.curryNum,
-                };
-                const res = await this.GET_TRADE_PATENT(params);
-                console.log(res);
+                const { type, keyword, selectPatentType, curryNum } = this;
+                const methodName = new Map([
+                    [
+                        "1",
+                        {
+                            name: "GET_TRADEMARK",
+                            params: {
+                                keyword,
+                            },
+                        },
+                    ], // 查商标
+                    [
+                        "2",
+                        {
+                            name: "GET_TRADE_PATENT",
+                            params: {
+                                searchKey: keyword,
+                                searchType: selectPatentType,
+                            },
+                        },
+                    ], // 查专利
+                    [
+                        "3",
+                        {
+                            name: "GET_NUCLEAR",
+                            params: {
+                                keyword,
+                            },
+                        },
+                    ], // 免费核名
+                ]);
+                const qdata = methodName.get(type);
+                const res = await this[qdata.name]({
+                    ...qdata.params,
+                    pageIndex: curryNum,
+                });
                 if (res.code === 200) {
                     this.commonData = res?.data?.result || [];
+                    this.groupItems = res?.data?.groupItems || {};
                     this.paging = res?.data?.paging || {};
                     let ele = document.querySelector(".search");
                     this.scrollIntoView(ele);
@@ -229,6 +328,17 @@ export default {
             width: 976px;
             border-collapse: separate;
 
+            &.input-grooup-1 {
+                width: 820px;
+            }
+
+            &.input-grooup-2 {
+            }
+
+            &.input-grooup-3 {
+                // width: 1200px;
+            }
+
             .patent-type-select {
                 width: 152px;
             }
@@ -266,6 +376,15 @@ export default {
         }
     }
 
+    .search-nuclear {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 170px;
+        background-image: url("/nuclear_bg.png");
+    }
+
     .footer {
         display: block;
         width: 1200px;
@@ -294,6 +413,24 @@ export default {
         margin: 20px 0 40px;
         -webkit-box-pack: center;
         -ms-flex-pack: center;
+    }
+}
+
+.search-main-nuclear {
+    ::v-deep .nuclear-select-item {
+        &::after {
+            height: 21px;
+        }
+
+        .el-input__inner {
+            height: 42px;
+        }
+    }
+
+    ::v-deep .nuclear-btn {
+        &.el-button--primary {
+            height: 42px;
+        }
     }
 }
 </style>
