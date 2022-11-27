@@ -352,7 +352,6 @@ export default {
         },
         // 密码登录
         async login(params) {
-            // console.log(aesDecrypt("PqOXQSt486GXRkDmsylMmA=="));
             params.password = aesEncrypt(
                 _.cloneDeep(JSON.stringify(params.password))
             );

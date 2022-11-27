@@ -142,7 +142,6 @@ export default {
         const groupItems = commonRes?.data?.groupItems || [];
         const paging = commonRes?.data?.paging || {};
 
-        console.log(commonRes);
         return {
             query,
             commonData,
@@ -265,7 +264,6 @@ export default {
                     ...qdata.params,
                     pageIndex: curryNum,
                 });
-                console.log(res);
                 if (res.code === 200) {
                     this.commonData = res?.data?.result;
                     this.groupItems = res?.data?.groupItems || {};

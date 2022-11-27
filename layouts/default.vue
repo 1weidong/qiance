@@ -51,25 +51,30 @@ export default {
             isIE: false,
             query: this.$route.query,
             routeName: this.$route.name,
+            isLoginPage: false,
         };
     },
 
     computed: {
         ...mapState(["userInfo"]),
-        isLoginPage({ routeName }) {
-            console.log(routeName);
-            const routeArr = [
-                "404",
-                "regMobile",
-                "users-login",
-                "resetPassword",
-            ];
-            return routeArr.includes(routeName) ? true : false;
+    },
+
+    watch: {
+        "$route.name": {
+            immediate: true,
+            handler(newVal) {
+                const routeArr = [
+                    "404",
+                    "regMobile",
+                    "users-login",
+                    "resetPassword",
+                ];
+                this.isLoginPage = !routeArr.includes(newVal) ? false : true;
+            },
         },
     },
 
     async created() {
-        console.log(this.userInfo);
         if (process.browser && _.isEmpty(this.userInfo)) {
             await this.getUserInfo();
         }

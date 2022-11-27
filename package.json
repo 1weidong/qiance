@@ -8,7 +8,7 @@
         "dev": "cross-env _ENV=local nuxt --port 3000",
         "build:dev": "rimraf dist/* && cross-env _ENV=dev nuxt build",
         "build:prod": "rimraf dist/* && cross-env _ENV=prod nuxt build",
-        "start": "_ENV=dev nuxt start",
+        "start": "_ENV=prod nuxt start",
         "test": "jest",
         "commit": "cz"
     },

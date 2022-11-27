@@ -4,7 +4,7 @@
         <div class="imgbor">
             <span class="icon"></span>
             <span class="tip">公司名称检测报告</span>
-            <span class="componname">上海21投资管理股份公司</span>
+            <span class="componname">{{ list.orgName }}</span>
             <span class="fen1">{{ list.score }}</span>
             <span class="fen2">分</span><br />
             <span class="info">
@@ -47,28 +47,19 @@
                 {{ list.proposal }}
             </span>
             <span class="left">最终以工商核名为准</span>
-            <span class="right">2022 年 11 月 21 日</span>
+            <span class="right">{{ list.searchTime }}</span>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    components: {},
     props: {
         list: {
             type: Object,
             default: () => {},
         },
     },
-    data() {
-        return {};
-    },
-    computed: {},
-    watch: {},
-    created() {},
-    mounted() {},
-    methods: {},
 };
 </script>
 
