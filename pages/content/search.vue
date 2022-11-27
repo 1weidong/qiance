@@ -138,7 +138,7 @@ export default {
         const qdata = methodName.get(type);
         const promises = [store.dispatch(qdata.name, qdata.params)];
         const [commonRes] = await Promise.all(promises);
-        const commonData = commonRes?.data?.result;
+        const commonData = commonRes?.data?.result || type === "3" ? {} : [];
         const groupItems = commonRes?.data?.groupItems || [];
         const paging = commonRes?.data?.paging || {};
 
