@@ -8,45 +8,46 @@
                 / <label>{{ title }}</label>
             </span>
         </div>
-
-        <div :class="['search', { 'search-nuclear': type === '3' }]">
-            <template v-if="type === '3'">
-                <searchSelect
-                    class="search-main-nuclear"
-                    @goListPage="getData"
-                />
-            </template>
-            <el-input
-                v-else
-                v-model="keyword"
-                :placeholder="searchPlaceholder"
-                :class="['input-grooup', `input-grooup-${type}`]"
-            >
-                <el-select
-                    v-if="type === 2"
-                    slot="prepend"
-                    v-model="selectPatentType"
-                    placeholder="请选择"
-                    class="patent-type-select"
-                >
-                    <el-option
-                        v-for="(item, index) in patentType"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                    ></el-option>
-                </el-select>
-                <template slot="append">
-                    <el-button
-                        class="search-btn"
-                        type="primary"
-                        @click="getData"
-                    >
-                        智能查询
-                    </el-button>
+        <client-only>
+            <div :class="['search', { 'search-nuclear': type === '3' }]">
+                <template v-if="type === '3'">
+                    <searchSelect
+                        class="search-main-nuclear"
+                        @goListPage="getData"
+                    />
                 </template>
-            </el-input>
-        </div>
+                <el-input
+                    v-else
+                    v-model="keyword"
+                    :placeholder="searchPlaceholder"
+                    :class="['input-grooup', `input-grooup-${type}`]"
+                >
+                    <el-select
+                        v-if="type === 2"
+                        slot="prepend"
+                        v-model="selectPatentType"
+                        placeholder="请选择"
+                        class="patent-type-select"
+                    >
+                        <el-option
+                            v-for="(item, index) in patentType"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.id"
+                        ></el-option>
+                    </el-select>
+                    <template slot="append">
+                        <el-button
+                            class="search-btn"
+                            type="primary"
+                            @click="getData"
+                        >
+                            智能查询
+                        </el-button>
+                    </template>
+                </el-input>
+            </div>
+        </client-only>
 
         <div class="footer">
             <span v-if="type !== '3'" class="tip">
@@ -137,7 +138,7 @@ export default {
         const qdata = methodName.get(type);
         const promises = [store.dispatch(qdata.name, qdata.params)];
         const [commonRes] = await Promise.all(promises);
-        const commonData = commonRes?.data?.result || [];
+        const commonData = commonRes?.data?.result;
         const groupItems = commonRes?.data?.groupItems || [];
         const paging = commonRes?.data?.paging || {};
 
@@ -264,8 +265,9 @@ export default {
                     ...qdata.params,
                     pageIndex: curryNum,
                 });
+                console.log(res);
                 if (res.code === 200) {
-                    this.commonData = res?.data?.result || [];
+                    this.commonData = res?.data?.result;
                     this.groupItems = res?.data?.groupItems || {};
                     this.paging = res?.data?.paging || {};
                     let ele = document.querySelector(".search");

@@ -118,7 +118,7 @@
                     <el-button
                         type="primary"
                         class="submitbutton"
-                        @click="validateForm()"
+                        @click="validateForm"
                     >
                         {{ pageType === 1 ? "登录" : "注册" }}
                     </el-button>
@@ -130,6 +130,7 @@
 
 <script>
 import utils from "~/utils/utils";
+import { aesEncrypt, aesDecrypt } from "@/utils/crypto";
 export default {
     props: {
         type: {
@@ -336,7 +337,11 @@ export default {
         },
         // 注册
         async register() {
-            const res = await this.REGISTER(this.ruleForm);
+            const form = _.cloneDeep(this.ruleForm);
+            form.password = aesEncrypt(
+                _.cloneDeep(JSON.stringify(form.password))
+            );
+            const res = await this.REGISTER(form);
             if (res.code === 200) {
                 const params = {
                     phonenumber: this.ruleForm.phonenumber,
@@ -347,6 +352,10 @@ export default {
         },
         // 密码登录
         async login(params) {
+            // console.log(aesDecrypt("PqOXQSt486GXRkDmsylMmA=="));
+            params.password = aesEncrypt(
+                _.cloneDeep(JSON.stringify(params.password))
+            );
             const res = await this.LOGIN(params);
             this.submit(res || {});
         },

@@ -32,13 +32,6 @@
 
 <script>
 export default {
-    props: {
-        routeName: {
-            type: String,
-            default: undefined,
-        },
-    },
-
     computed: {
         ...mapState(["userInfo"]),
         isLogin({ userInfo }) {
@@ -47,6 +40,9 @@ export default {
         phone({ userInfo }) {
             if (!userInfo?.user) return;
             return userInfo?.user?.phonenumber;
+        },
+        routeName() {
+            return this.$route.name;
         },
     },
 

@@ -1,23 +1,50 @@
 <template>
-    <div class="content">
-        <span class="top">公司名称检测报告</span>
+    <div v-if="list" class="content">
+        <p class="top">公司名称检测报告</p>
         <div class="imgbor">
-            <div class="icon"></div>
+            <span class="icon"></span>
             <span class="tip">公司名称检测报告</span>
-            <span class="componname">北京111投资管理有限公司</span>
-            <span class="fen1">80</span>
+            <span class="componname">上海21投资管理股份公司</span>
+            <span class="fen1">{{ list.score }}</span>
             <span class="fen2">分</span><br />
             <span class="info">
                 注册成功率
-                <label class="l1" style="color: rgb(99, 181, 31)">"</label>
-                <label class="s2" style="color: rgb(99, 181, 31)">高</label>
-                <label class="l1" style="color: rgb(99, 181, 31)">"</label>
+                <span
+                    class="l1"
+                    :style="{
+                        color:
+                            list.registrationRisk === '高'
+                                ? 'rgb(99, 181, 31)'
+                                : 'red',
+                    }"
+                >
+                    "
+                </span>
+                <span
+                    class="s2"
+                    :style="{
+                        color:
+                            list.registrationRisk === '高'
+                                ? 'rgb(99, 181, 31)'
+                                : 'red',
+                    }"
+                >
+                    {{ list.registrationRisk }}
+                </span>
+                <span
+                    class="l1"
+                    :style="{
+                        color:
+                            list.registrationRisk === '高'
+                                ? 'rgb(99, 181, 31)'
+                                : 'red',
+                    }"
+                >
+                    "
+                </span>
             </span>
             <span class="fot">
-                专家建议:
-                <label>
-                    检测到当前公司名称非常不错，建议您尽快注册，避免被别人抢注哦
-                </label>
+                {{ list.proposal }}
             </span>
             <span class="left">最终以工商核名为准</span>
             <span class="right">2022 年 11 月 21 日</span>
@@ -28,7 +55,12 @@
 <script>
 export default {
     components: {},
-    props: {},
+    props: {
+        list: {
+            type: Object,
+            default: () => {},
+        },
+    },
     data() {
         return {};
     },
@@ -134,7 +166,7 @@ export default {
         line-height: 28px;
     }
 
-    .info label {
+    .info span {
         color: red;
     }
 
@@ -146,7 +178,7 @@ export default {
         color: #444;
         font-size: 16px;
         font-family: MicrosoftYaHei;
-        line-height: 16px;
+        line-height: 24px;
     }
 
     .left {

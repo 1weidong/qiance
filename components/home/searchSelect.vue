@@ -1,42 +1,44 @@
 <template>
     <div class="nuclear-select">
-        <el-cascader
-            v-model="city"
-            placeholder="注册城市"
-            :options="cityData"
-            class="nuclear-select-item nuclear-city"
-            @change="handleChange(0)"
-        ></el-cascader>
-        <el-input
-            v-model="name"
-            class="nuclear-select-item nuclear-name"
-            placeholder="请输入字号"
-            @blur="handleChange(1)"
-        ></el-input>
-        <el-cascader
-            v-model="kind"
-            placeholder="行业"
-            class="nuclear-select-item nuclear-kind"
-            :options="kindData"
-            @change="handleChange(2)"
-        ></el-cascader>
-        <el-select
-            v-model="type"
-            placeholder="有限公司"
-            class="nuclear-select-item nuclear-type"
-            @change="handleChange(3)"
-        >
-            <el-option
-                v-for="item in typeData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+        <client-only>
+            <el-cascader
+                v-model="city"
+                placeholder="注册城市"
+                :options="cityData"
+                class="nuclear-select-item nuclear-city"
+                @change="handleChange(0)"
+            ></el-cascader>
+            <el-input
+                v-model="name"
+                class="nuclear-select-item nuclear-name"
+                placeholder="请输入字号"
+                @blur="handleChange(1)"
+            ></el-input>
+            <el-cascader
+                v-model="kind"
+                placeholder="行业"
+                class="nuclear-select-item nuclear-kind"
+                :options="kindData"
+                @change="handleChange(2)"
+            ></el-cascader>
+            <el-select
+                v-model="type"
+                placeholder="有限公司"
+                class="nuclear-select-item nuclear-type"
+                @change="handleChange(3)"
             >
-            </el-option>
-        </el-select>
-        <el-button class="nuclear-btn" type="primary" @click="goListPage">
-            立即核名
-        </el-button>
+                <el-option
+                    v-for="item in typeData"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                >
+                </el-option>
+            </el-select>
+            <el-button class="nuclear-btn" type="primary" @click="goListPage">
+                立即核名
+            </el-button>
+        </client-only>
     </div>
 </template>
 
@@ -46,21 +48,14 @@ export default {
     data() {
         return {
             city: [],
-            cityData: [],
+            cityData: cascadeData.get("city"),
             name: "",
             kind: [],
-            kindData: [],
+            kindData: cascadeData.get("kind"),
             type: "",
-            typeData: [],
+            typeData: cascadeData.get("type"),
             keyword: [],
         };
-    },
-
-    mounted() {
-        this.cityData = cascadeData.get("city");
-        this.kindData = cascadeData.get("kind");
-        this.typeData = cascadeData.get("type");
-        console.log(this.kindData);
     },
 
     methods: {

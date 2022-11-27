@@ -1,7 +1,9 @@
 <template>
-    <div class="login-container">
-        <resetPassword></resetPassword>
-    </div>
+    <client-only>
+        <div class="login-container">
+            <resetPassword></resetPassword>
+        </div>
+    </client-only>
 </template>
 
 <script>

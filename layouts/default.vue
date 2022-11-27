@@ -28,7 +28,7 @@
         </div>
         <div class="Index">
             <template v-if="!isLoginPage">
-                <HeaderBox :route-name="routeName" />
+                <HeaderBox />
                 <nuxt />
             </template>
             <template v-else>
@@ -57,11 +57,12 @@ export default {
     computed: {
         ...mapState(["userInfo"]),
         isLoginPage({ routeName }) {
+            console.log(routeName);
             const routeArr = [
                 "404",
-                "reg-mobile",
+                "regMobile",
                 "users-login",
-                "reset-password",
+                "resetPassword",
             ];
             return routeArr.includes(routeName) ? true : false;
         },

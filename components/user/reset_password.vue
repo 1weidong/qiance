@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { aesEncrypt } from "@/utils/crypto";
 import login from "@/components/user/login";
 import passwordMixin from "~/components/user/mixins/password";
 import loginHead from "~/components/user/loginHead";
@@ -79,6 +80,12 @@ export default {
                         smsCode: loginData.smsCode,
                         ...passwordData,
                     };
+                    qdata.newPassword = aesEncrypt(
+                        _.cloneDeep(JSON.stringify(qdata.newPassword))
+                    );
+                    qdata.password = aesEncrypt(
+                        _.cloneDeep(JSON.stringify(qdata.password))
+                    );
                     this.resetPassword(qdata);
                 }
             );

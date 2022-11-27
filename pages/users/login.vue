@@ -1,5 +1,7 @@
 <template>
-    <loginComponent></loginComponent>
+    <client-only>
+        <loginComponent></loginComponent>
+    </client-only>
 </template>
 
 <script>

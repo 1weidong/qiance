@@ -16,21 +16,23 @@
                 <searchSelect @goListPage="goListPage" />
             </template>
             <template v-else>
-                <el-input
-                    v-model="keyword"
-                    :placeholder="searchPlaceholder"
-                    class="input-grooup"
-                >
-                    <template slot="append">
-                        <el-button
-                            class="search-btn"
-                            type="primary"
-                            @click="goListPage"
-                        >
-                            智能查询
-                        </el-button>
-                    </template>
-                </el-input>
+                <client-only>
+                    <el-input
+                        v-model="keyword"
+                        :placeholder="searchPlaceholder"
+                        class="input-grooup"
+                    >
+                        <template slot="append">
+                            <el-button
+                                class="search-btn"
+                                type="primary"
+                                @click="goListPage"
+                            >
+                                智能查询
+                            </el-button>
+                        </template>
+                    </el-input>
+                </client-only>
             </template>
         </div>
     </div>
