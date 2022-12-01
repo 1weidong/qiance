@@ -1,5 +1,5 @@
 <template>
-    <div v-if="list" class="content">
+    <div v-if="!isShowList" class="content">
         <p class="top">公司名称检测报告</p>
         <div class="imgbor">
             <span class="icon"></span>
@@ -58,6 +58,12 @@ export default {
         list: {
             type: Object,
             default: () => {},
+        },
+    },
+
+    computed: {
+        isShowList({ list }) {
+            return _.isEmpty(list);
         },
     },
 };

@@ -89,66 +89,13 @@ export default {
         nuclearBox,
     },
 
-    async asyncData({ store, query }) {
+    async asyncData({ query }) {
         const { keyword, type } = query;
-        if (!type) {
-            return {
-                query,
-                commonData: [],
-                groupItems: [],
-                paging: {},
-                keyword: "",
-                type: "1",
-            };
-        }
-
-        const methodName = new Map([
-            // 查商标
-            [
-                "1",
-                {
-                    name: "GET_TRADEMARK",
-                    params: {
-                        keyword,
-                    },
-                },
-            ],
-            // 查专利
-            [
-                "2",
-                {
-                    name: "GET_TRADE_PATENT",
-                    params: {
-                        searchKey: keyword,
-                        searchType: "title",
-                    },
-                },
-            ],
-            // 免费核名
-            [
-                "3",
-                {
-                    name: "GET_NUCLEAR",
-                    params: {
-                        keyword,
-                    },
-                },
-            ],
-        ]);
-        const qdata = methodName.get(type);
-        const promises = [store.dispatch(qdata.name, qdata.params)];
-        const [commonRes] = await Promise.all(promises);
-        const commonData = commonRes?.data?.result || type === "3" ? {} : [];
-        const groupItems = commonRes?.data?.groupItems || [];
-        const paging = commonRes?.data?.paging || {};
-
         return {
             query,
-            commonData,
-            groupItems,
-            paging,
             keyword,
-            type,
+            type: type ? type : '1',
+            commonData: type === '3' ? {} : [],
         };
     },
 
@@ -178,6 +125,8 @@ export default {
                 },
             ],
             curryNum: 1,
+            groupItems: [],
+            paging: {},
         };
     },
 
@@ -220,13 +169,14 @@ export default {
 
     created() {
         if (process.client) {
+            if (!this.keyword) return;
             this.getData();
         }
     },
 
     methods: {
         ...mapActions(["GET_TRADEMARK", "GET_TRADE_PATENT", "GET_NUCLEAR"]),
-        async getData() {
+        getData: _.debounce(async function () {
             try {
                 const { type, keyword, selectPatentType, curryNum } = this;
                 const methodName = new Map([
@@ -265,7 +215,7 @@ export default {
                     pageIndex: curryNum,
                 });
                 if (res.code === 200) {
-                    this.commonData = res?.data?.result;
+                    this.commonData = res?.data?.result || (type == '3' ? {} : []) ;
                     this.groupItems = res?.data?.groupItems || {};
                     this.paging = res?.data?.paging || {};
                     let ele = document.querySelector(".search");
@@ -274,7 +224,7 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-        },
+        }, 500),
 
         // 页面更新
         handelChangePage(num) {

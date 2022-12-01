@@ -44,12 +44,12 @@ export default {
     mixins: [searchMixins],
 
     methods: {
-        goListPage(data) {
+        goListPage: _.debounce(function (data) {
             this.$router.push({
                 path: "/search",
                 query: { keyword: this.keyword, type: this.active, ...data },
             });
-        },
+        }, 500),
     },
 };
 </script>
