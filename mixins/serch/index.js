@@ -7,8 +7,12 @@ export default {
 
     data() {
         return {
-            active: 1,
+            active: 4,
             searchType: [
+                {
+                    id: 4,
+                    title: "查服务",
+                },
                 {
                     id: 1,
                     title: "查商标",
@@ -21,10 +25,15 @@ export default {
                     id: 3,
                     title: "免费核名",
                 },
+                {
+                    id: 5,
+                    title: "免费起名",
+                },
             ],
             keyword: undefined,
             searchPlaceholder: undefined,
             methodName: undefined,
+            searchName: "查服务",
         };
     },
 
@@ -39,14 +48,21 @@ export default {
                     case 1:
                         placeholder = searchPlaceholder.TRADEMARK;
                         name = "GET_TRADEMARK";
+                        this.searchName = "查商标";
                         break;
                     case 2:
                         placeholder = searchPlaceholder.TRADE_PATENT;
                         name = "GET_TRADE_PATENT";
+                        this.searchName = "查专利";
                         break;
                     case 3:
                         placeholder = "请输入核名名称";
                         name = "GET_NUCLEAR";
+                        break;
+                    case 4:
+                        placeholder = "请输入服务名称，如“商标注册”";
+                        name = "GET_NUCLEAR";
+                        this.searchName = "查服务";
                         break;
                 }
                 this.searchPlaceholder = placeholder;

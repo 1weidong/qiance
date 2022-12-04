@@ -12,8 +12,8 @@
             </li>
         </ul>
         <div class="contents">
-            <template v-if="active === 3">
-                <searchSelect @goListPage="goListPage" />
+            <template v-if="active === 3 || active === 5">
+                <searchSelect :search-type="active" @goListPage="goListPage" />
             </template>
             <template v-else>
                 <client-only>
@@ -28,12 +28,15 @@
                                 type="primary"
                                 @click="goListPage"
                             >
-                                智能查询
+                                {{ searchName }}
                             </el-button>
                         </template>
                     </el-input>
                 </client-only>
             </template>
+            <p v-if="active === 4" class="hot-search-tip">
+                热门搜索：公司注册、商标注册、代理记账、专利申请、资质代办
+            </p>
         </div>
     </div>
 </template>
@@ -45,6 +48,10 @@ export default {
 
     methods: {
         goListPage: _.debounce(function (data) {
+            if (this.active === 4) {
+                location.href = `http://8.142.4.227:39002/index.php?m=search&c=index&a=init&typeid=1&siteid=1&q=${this.keyword}`;
+                return;
+            }
             this.$router.push({
                 path: "/search",
                 query: { keyword: this.keyword, type: this.active, ...data },
@@ -59,7 +66,7 @@ export default {
     position: relative;
     z-index: 2;
     width: 1000px;
-    margin: -203px auto 0;
+    margin: -242px auto 0;
 
     li {
         position: relative;
@@ -114,6 +121,11 @@ export default {
     .contents {
         padding-top: 43px;
         padding-bottom: 100px;
+
+        .hot-search-tip {
+            margin-top: 15px;
+            color: #fff;
+        }
     }
 
     .input-grooup {

@@ -9,10 +9,11 @@
             </span>
         </div>
         <client-only>
-            <div :class="['search', { 'search-nuclear': type === '3' }]">
-                <template v-if="type === '3'">
+            <div :class="['search', { 'search-nuclear': nuclearType }]">
+                <template v-if="nuclearType">
                     <searchSelect
                         class="search-main-nuclear"
+                        :search-type="type"
                         @goListPage="getData"
                     />
                 </template>
@@ -23,7 +24,7 @@
                     :class="['input-grooup', `input-grooup-${type}`]"
                 >
                     <el-select
-                        v-if="type === 2"
+                        v-if="type === '2'"
                         slot="prepend"
                         v-model="selectPatentType"
                         placeholder="请选择"
@@ -50,7 +51,7 @@
         </client-only>
 
         <div class="footer">
-            <span v-if="type !== '3'" class="tip">
+            <span v-if="!nuclearType" class="tip">
                 共为你检索到
                 <span class="info totalInfo" style="color: #f00">{{
                     total
@@ -91,11 +92,12 @@ export default {
 
     async asyncData({ query }) {
         const { keyword, type } = query;
+        const active = parseInt(type);
         return {
             query,
             keyword,
-            type: type ? type : '1',
-            commonData: type === '3' ? {} : [],
+            type: active ? active : 1,
+            commonData: active === 3 || active === 5 ? {} : [],
         };
     },
 
@@ -131,11 +133,11 @@ export default {
     },
 
     computed: {
-        title({ query }) {
-            const { type } = query;
-            if (type === "1") return "商标查询";
-            if (type === "2") return "查专利";
-            return "免费核名";
+        title({ type }) {
+            if (type === 1) return "商标查询";
+            if (type === 2) return "查专利";
+            if (type === 3) return "免费核名";
+            return "免费起名";
         },
 
         total({ paging }) {
@@ -145,13 +147,13 @@ export default {
         searchPlaceholder({ type }) {
             let placeholder = undefined;
             switch (type) {
-                case "1":
+                case 1:
                     placeholder = searchPlaceholder.TRADEMARK;
                     break;
-                case "2":
+                case 2:
                     placeholder = searchPlaceholder.TRADE_PATENT;
                     break;
-                case "3":
+                case 3:
                     // placeholder = "请输入核名名称";
                     break;
             }
@@ -159,11 +161,14 @@ export default {
         },
 
         componentName({ type }) {
-            if (type === "1") {
+            if (type === 1) {
                 return TrademarkBox;
             }
 
-            return type === "2" ? PatentBox : nuclearBox;
+            return type === 2 ? PatentBox : nuclearBox;
+        },
+        nuclearType({ type }) {
+            return type === 3 || type === 5;
         },
     },
 
@@ -179,18 +184,24 @@ export default {
         getData: _.debounce(async function () {
             try {
                 const { type, keyword, selectPatentType, curryNum } = this;
+                if (!keyword) {
+                    this.$message.warning("请输入查询内容");
+                    return;
+                }
                 const methodName = new Map([
                     [
-                        "1",
+                        // 查商标
+                        1,
                         {
                             name: "GET_TRADEMARK",
                             params: {
                                 keyword,
                             },
                         },
-                    ], // 查商标
+                    ],
                     [
-                        "2",
+                        // 查专利
+                        2,
                         {
                             name: "GET_TRADE_PATENT",
                             params: {
@@ -198,16 +209,27 @@ export default {
                                 searchType: selectPatentType,
                             },
                         },
-                    ], // 查专利
+                    ],
                     [
-                        "3",
+                        // 免费核名
+                        3,
                         {
                             name: "GET_NUCLEAR",
                             params: {
                                 keyword,
                             },
                         },
-                    ], // 免费核名
+                    ],
+                    [
+                        // 免费起名
+                        5,
+                        {
+                            name: "GET_NUCLEAR",
+                            params: {
+                                keyword,
+                            },
+                        },
+                    ],
                 ]);
                 const qdata = methodName.get(type);
                 const res = await this[qdata.name]({
@@ -215,7 +237,8 @@ export default {
                     pageIndex: curryNum,
                 });
                 if (res.code === 200) {
-                    this.commonData = res?.data?.result || (type == '3' ? {} : []) ;
+                    this.commonData =
+                        res?.data?.result || (type == 3 || type == 5 ? {} : []);
                     this.groupItems = res?.data?.groupItems || {};
                     this.paging = res?.data?.paging || {};
                     let ele = document.querySelector(".search");

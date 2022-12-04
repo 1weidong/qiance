@@ -36,7 +36,7 @@
                 </el-option>
             </el-select>
             <el-button class="nuclear-btn" type="primary" @click="goListPage">
-                立即核名
+                {{ searchType === 3 ? "立即核名" : "立即起名" }}
             </el-button>
         </client-only>
     </div>
@@ -45,6 +45,13 @@
 <script>
 import { cascadeData } from "~/utils/commonText";
 export default {
+    props: {
+        searchType: {
+            type: Number,
+            default: null,
+        },
+    },
+
     data() {
         return {
             city: [],
