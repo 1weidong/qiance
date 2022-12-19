@@ -73,6 +73,9 @@
                 </el-pagination>
             </div>
         </div>
+        <p class="copyright">
+            Copyright @千策公司 2018-现在 备案号：京ICP备18058202号-1
+        </p>
     </div>
 </template>
 
@@ -181,10 +184,13 @@ export default {
 
     methods: {
         ...mapActions(["GET_TRADEMARK", "GET_TRADE_PATENT", "GET_NUCLEAR"]),
-        getData: _.debounce(async function () {
+        getData: _.debounce(async function (nuclearType) {
             try {
-                const { type, keyword, selectPatentType, curryNum } = this;
-                if (!keyword) {
+                const { type, selectPatentType, curryNum } = this;
+                if (nuclearType) {
+                    this.keyword = nuclearType?.keyword;
+                }
+                if (!this.keyword) {
                     this.$message.warning("请输入查询内容");
                     return;
                 }
@@ -195,7 +201,7 @@ export default {
                         {
                             name: "GET_TRADEMARK",
                             params: {
-                                keyword,
+                                keyword: this.keyword,
                             },
                         },
                     ],
@@ -205,7 +211,7 @@ export default {
                         {
                             name: "GET_TRADE_PATENT",
                             params: {
-                                searchKey: keyword,
+                                searchKey: this.keyword,
                                 searchType: selectPatentType,
                             },
                         },
@@ -216,7 +222,7 @@ export default {
                         {
                             name: "GET_NUCLEAR",
                             params: {
-                                keyword,
+                                keyword: this.keyword,
                             },
                         },
                     ],
@@ -226,7 +232,7 @@ export default {
                         {
                             name: "GET_NUCLEAR",
                             params: {
-                                keyword,
+                                keyword: this.keyword,
                             },
                         },
                     ],
@@ -405,5 +411,14 @@ export default {
             height: 42px;
         }
     }
+}
+
+.copyright {
+    margin-top: 30px;
+    padding: 30px 0;
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+    border-top: 1px solid #e8e8e8;
 }
 </style>

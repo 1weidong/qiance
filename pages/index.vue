@@ -2,8 +2,8 @@
     <div class="home">
         <div class="banner">
             <div class="bannerInfo">
-                <h3>商标版权 自己主宰</h3>
-                <h3>浩瀚沙海 不做尘埃</h3>
+                <h3>免费的商业查询工具</h3>
+                <!-- <h3>浩瀚沙海 不做尘埃</h3>
                 <p>
                     商标查询
                     <span>/</span>
@@ -11,7 +11,7 @@
                     <span>/</span>
                     智能分析
                     <span></span>
-                </p>
+                </p> -->
             </div>
         </div>
         <searchMain />
@@ -48,7 +48,7 @@ export default {
         z-index: 2;
         width: 1200px;
         margin: 0 auto;
-        padding: 145px 242px 40px;
+        padding: 285px 242px 40px;
         text-align: center;
 
         > h3 {
